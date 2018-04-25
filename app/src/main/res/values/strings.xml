@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">sinchCallSimple</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_incomming_call">IncommingCallActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

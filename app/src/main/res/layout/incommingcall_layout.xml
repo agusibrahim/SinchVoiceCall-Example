@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#dd3344"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:id="@+id/calling_notify"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/calling_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calling..."
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/calling_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agus Ibrahim"
+            android:textColor="#fff"
+            android:textSize="35sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/calling_action_button"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/calling_answer"
+            android:layout_weight="1"
+            android:text="ANSWER"
+            android:textColor="#fff"
+            android:background="#22aa11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/calling_reject"
+            android:layout_weight="1"
+            android:text="REJECT"
+            android:textColor="#fff"
+            android:background="#aa2211"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
