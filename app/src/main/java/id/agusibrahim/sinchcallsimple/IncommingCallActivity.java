@@ -2,6 +2,11 @@ package id.agusibrahim.sinchcallsimple;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -9,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -22,7 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class IncommingCallActivity extends AppCompatActivity implements View.OnClickListener {
+public class IncommingCallActivity extends AppCompatActivity implements View.OnClickListener,SensorEventListener {
     private TextView mCallingStatus;
     private TextView mCallingName;
     private LinearLayout mCallingNotify;
@@ -32,6 +38,8 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
     private Call call;
     private Ringtone r;
     private boolean isIncomming;
+    private SensorManager mSensorManager;
+    private Sensor mProximity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +54,9 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.incommingcall_layout);
         initView();
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
         call = Apps.callClient.getCall(getIntent().getStringExtra("callid"));
         isIncomming=getIntent().getBooleanExtra("incomming", true);
         if(isIncomming) {
@@ -54,10 +65,10 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
             mCallingName.setText(call.getRemoteUserId()+"");
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
             r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            setFullscreen(true);
+            UiUtils.setFullscreen(this, true);
             r.play();
         }else{
-            setFullscreen(false);
+            UiUtils.setFullscreen(this, false);
             mCallingStatus.setText("MEMANGGIL...");
             mCallingAnswer.setVisibility(View.GONE);
             mCallingName.setText(call.getRemoteUserId()+"");
@@ -88,7 +99,7 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
                 mCallingStatus.setText("ACTIVE CALL");
                 setBlinking(mCallingNotify, false);
                 if(r!=null)r.stop();
-                setFullscreen(false);
+                UiUtils.setFullscreen(this, false);
                 break;
             case R.id.calling_reject:
                 call.hangup();
@@ -118,15 +129,6 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void setFullscreen(boolean status){
-        if(status){
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else{
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        }
-    }
     @Override
     public void onStart() {
         super.onStart();
@@ -148,5 +150,38 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
         anim.setRepeatMode(ValueAnimator.REVERSE);
         anim.setRepeatCount(ValueAnimator.INFINITE);
         anim.start();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        if(event.values[0]==0){
+            params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            params.screenBrightness = 0;
+            getWindow().setAttributes(params);
+            UiUtils.enableDisableViewGroup((ViewGroup)findViewById(R.id.calling_root).getParent(),false);
+            UiUtils.setFullscreen(this, true);
+        }else {
+            params.screenBrightness = -1;
+            getWindow().setAttributes(params);
+            UiUtils.enableDisableViewGroup((ViewGroup)findViewById(R.id.calling_root).getParent(),true);
+            UiUtils.setFullscreen(this, false);
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mProximity,SensorManager.SENSOR_DELAY_NORMAL);
     }
 }

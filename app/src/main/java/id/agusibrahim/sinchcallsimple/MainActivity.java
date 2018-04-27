@@ -1,12 +1,24 @@
 package id.agusibrahim.sinchcallsimple;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +36,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Method;
+
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mMainCallbtn;
     private EditText mMainTargetid;
     private TextView mMainStatus;
-    private CallClient callclient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainMyid.setText(Apps.USER_ID);
         mMainCallbtn.setEnabled(Apps.sinchClient.isStarted());
         startService(new Intent(this, SinchService.class));
+        if(Apps.callClient!=null&&Apps.sinchClient.isStarted()){
+            mMainStatus.setText("Client Connected, ready to use!");
+        }
     }
 
     @Override
@@ -67,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainCallbtn.setOnClickListener(this);
         mMainTargetid = findViewById(R.id.main_targetid);
         mMainStatus = findViewById(R.id.main_status);
+
+        mMainMyid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -79,7 +102,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mMainTargetid.setError("Masukan ID yang benar");
                     break;
                 }else mMainTargetid.setError(null);
-                Call currentcall = callclient.callUser(mMainTargetid.getText().toString());
+                if(Apps.callClient==null){
+                    Toast.makeText(this, "Sinch Client not connected", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Call currentcall = Apps.callClient.callUser(mMainTargetid.getText().toString());
                 Intent callscreen = new Intent(this, IncommingCallActivity.class);
                 callscreen.putExtra("callid", currentcall.getCallId());
                 callscreen.putExtra("incomming", false);
@@ -92,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onSinchConnected(SinchStatus.SinchConnected sinchConnected){
         mMainStatus.append(String.format("* CONNECTED :)\n---------------------------\n"));
         mMainCallbtn.setEnabled(true);
-        callclient=sinchConnected.callClient;
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSinchDisconnected(SinchStatus.SinchDisconnected sinchDisconnected){

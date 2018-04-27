@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#dd3344"
+    android:id="@+id/calling_root"
     android:padding="20dp">
 
     <LinearLayout
