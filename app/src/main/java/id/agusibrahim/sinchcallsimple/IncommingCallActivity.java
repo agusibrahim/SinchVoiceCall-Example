@@ -2,6 +2,7 @@ package id.agusibrahim.sinchcallsimple;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Notification;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,6 +13,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +130,9 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
                 Toast.makeText(this, "NO ANSWER", Toast.LENGTH_SHORT).show();
             }else if(sinchLogger.message.contains("terminationCause=TIMEOUT")){
                 Toast.makeText(this, "TIMEOUT", Toast.LENGTH_SHORT).show();
+            }else if(sinchLogger.message.contains("terminationCause=CANCELED")){
+                Notification n = new NotificationCompat.Builder(this, "calling").setContentTitle("Missed Call").setAutoCancel(true).setContentText("You have missed call from " + call.getRemoteUserId()).setSmallIcon(android.R.drawable.sym_call_missed).build();
+                NotificationManagerCompat.from(this).notify(1133,n);
             }
             finish();
         }
