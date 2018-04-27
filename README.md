@@ -8,6 +8,7 @@ Simple implementation of voice call over the internet via Sinch Service.
 * Receive Call
 * Caller UI with Ringtone
 * Run in Service
+* Add proximity while making a call with phone positioned close to the ear
 
 <img src="https://github.com/agusibrahim/SinchVoiceCall-Example/blob/master/media/Screenshot_1524685785.png" width="200"> | <img src="https://github.com/agusibrahim/SinchVoiceCall-Example/blob/master/media/Screenshot_1524685771.png" width="200"> | <img src="https://github.com/agusibrahim/SinchVoiceCall-Example/blob/master/media/Screenshot_1524685723.png" width="200">
 ------------ | ------------- | -------------
