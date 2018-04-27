@@ -40,6 +40,7 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
     private boolean isIncomming;
     private SensorManager mSensorManager;
     private Sensor mProximity;
+    private View mCallingBlacksreen;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
         mCallingReject = findViewById(R.id.calling_reject);
         mCallingReject.setOnClickListener(this);
         mCallingActionButton = findViewById(R.id.calling_action_button);
+        mCallingBlacksreen=findViewById(R.id.calling_blackscreen);
     }
 
     @Override
@@ -161,11 +163,13 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
             getWindow().setAttributes(params);
             UiUtils.enableDisableViewGroup((ViewGroup)findViewById(R.id.calling_root).getParent(),false);
             UiUtils.setFullscreen(this, true);
+            mCallingBlacksreen.setVisibility(View.VISIBLE);
         }else {
             params.screenBrightness = -1;
             getWindow().setAttributes(params);
             UiUtils.enableDisableViewGroup((ViewGroup)findViewById(R.id.calling_root).getParent(),true);
             UiUtils.setFullscreen(this, false);
+            mCallingBlacksreen.setVisibility(View.GONE);
         }
     }
     @Override

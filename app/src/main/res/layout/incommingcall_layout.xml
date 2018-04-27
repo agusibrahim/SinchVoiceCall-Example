@@ -1,56 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calling_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#dd3344"
-    android:id="@+id/calling_root"
-    android:padding="20dp">
+    android:background="#dd3344">
 
-    <LinearLayout
-        android:id="@+id/calling_notify"
-        android:orientation="vertical"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/calling_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Calling..."
-            android:textColor="#fff"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:id="@+id/calling_notify"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/calling_name"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/calling_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calling..."
+                android:textColor="#fff"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/calling_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agus Ibrahim"
+                android:textColor="#fff"
+                android:textSize="35sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/calling_action_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agus Ibrahim"
-            android:textColor="#fff"
-            android:textSize="35sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/calling_action_button"
-        android:layout_alignParentBottom="true"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/calling_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#22aa11"
+                android:text="ANSWER"
+                android:textColor="#fff" />
+
+            <Button
+                android:id="@+id/calling_reject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#aa2211"
+                android:text="REJECT"
+                android:textColor="#fff" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/calling_blackscreen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/calling_answer"
-            android:layout_weight="1"
-            android:text="ANSWER"
-            android:textColor="#fff"
-            android:background="#22aa11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/calling_reject"
-            android:layout_weight="1"
-            android:text="REJECT"
-            android:textColor="#fff"
-            android:background="#aa2211"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
 </RelativeLayout>
