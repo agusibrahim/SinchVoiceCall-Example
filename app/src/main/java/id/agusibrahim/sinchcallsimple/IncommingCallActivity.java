@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sinch.android.rtc.calling.Call;
+import com.sinch.android.rtc.calling.CallState;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -158,12 +159,14 @@ public class IncommingCallActivity extends AppCompatActivity implements View.OnC
     public void onSensorChanged(SensorEvent event) {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         if(event.values[0]==0){
-            params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-            params.screenBrightness = 0;
-            getWindow().setAttributes(params);
-            UiUtils.enableDisableViewGroup((ViewGroup)findViewById(R.id.calling_root).getParent(),false);
-            UiUtils.setFullscreen(this, true);
-            mCallingBlacksreen.setVisibility(View.VISIBLE);
+            if(!isIncomming || call.getState() == CallState.ESTABLISHED) {
+                params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                params.screenBrightness = 0;
+                getWindow().setAttributes(params);
+                UiUtils.enableDisableViewGroup((ViewGroup) findViewById(R.id.calling_root).getParent(), false);
+                UiUtils.setFullscreen(this, true);
+                mCallingBlacksreen.setVisibility(View.VISIBLE);
+            }
         }else {
             params.screenBrightness = -1;
             getWindow().setAttributes(params);
