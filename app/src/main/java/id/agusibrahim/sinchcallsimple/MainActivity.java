@@ -83,13 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainCallbtn.setOnClickListener(this);
         mMainTargetid = findViewById(R.id.main_targetid);
         mMainStatus = findViewById(R.id.main_status);
-
-        mMainMyid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override
